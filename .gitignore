@@ -1,0 +1,20 @@
+# Unreal Engine 불필요 폴더
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Windows/
+Build/
+
+# Visual Studio 관련
+.vs/
+.vscode/
+*.sln
+*.VC.db
+*.log
+*.tmp
+*.user
+
+# OS 임시파일
+.DS_Store
+Thumbs.db
