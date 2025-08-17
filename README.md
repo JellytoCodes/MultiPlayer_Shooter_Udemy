@@ -1,9 +1,9 @@
 # UE5 Multiplayer Shooter
-
-## 프로젝트 개요
 UE5 C++로 경쟁형 멀티플레이어 슈터를 구현하고 멀티 기능을 플러그인으로 모듈화해 재사용 가능하게 만드는 것이 목적.
 
 ---
+
+<br>
 
 ## 강의 목표 및 특징
 
@@ -16,7 +16,7 @@ UE5 C++로 경쟁형 멀티플레이어 슈터를 구현하고 멀티 기능을 
 | 성능·지연 보상 | Client-side prediction, Server-side rewind, Relevancy·UpdateRate 튜닝, 트래픽·틱 비용 절감, Network Profiler·Net Emulation 활용. |
 | C++↔Blueprint 운영 | 네트워킹·무기 코어 C++, UI·애님·튜닝 BP. 권장 비중 7:3. |
 
----
+<br>
 
 ## 커리큘럼
 
