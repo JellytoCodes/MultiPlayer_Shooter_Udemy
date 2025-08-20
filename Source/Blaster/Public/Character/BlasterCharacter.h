@@ -28,6 +28,7 @@ public:
 	virtual void PostInitializeComponents() override;
 
 	bool IsWeaponEquipped();
+	bool IsAiming();
 
 	/** ~Begin Getter & Setter */
 	void SetOverlappingWeapon(AWeapon* Weapon);
@@ -39,6 +40,9 @@ protected:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void EquipButtonPressed();
+	void CrouchButtonPressed();
+	void AimButtonPressed();
+	void AimButtonReleased();
 
 private :
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
@@ -62,6 +66,12 @@ private :
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	UInputAction* EquippedAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	UInputAction* CrouchAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	UInputAction* AimAction;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWidgetComponent> OverheadWidget;
 
@@ -76,4 +86,5 @@ private :
 
 	UFUNCTION(Server, Reliable)
 	void ServerEquipButtonPressed();
+
 };

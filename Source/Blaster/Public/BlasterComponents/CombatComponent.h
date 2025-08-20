@@ -32,4 +32,6 @@ private :
 
 	UPROPERTY(Replicated)
 	TObjectPtr<AWeapon> EquippedWeapon;
+
+	bool bAiming;
 };
