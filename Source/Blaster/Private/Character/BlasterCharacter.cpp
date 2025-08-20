@@ -135,21 +135,15 @@ void ABlasterCharacter::EquipButtonPressed()
 
 void ABlasterCharacter::CrouchButtonPressed()
 {
-	if (bIsCrouched)
-	{
-		UnCrouch();	
-	}
-	else
-	{
-		Crouch();	
-	}
+	if (bIsCrouched)	UnCrouch();
+	else				Crouch();	
 }
 
 void ABlasterCharacter::AimButtonPressed()
 {
 	if (Combat)
 	{
-		Combat->bAiming = true;
+		Combat->SetAiming(true);	
 	}
 }
 
@@ -157,7 +151,7 @@ void ABlasterCharacter::AimButtonReleased()
 {
 	if (Combat)
 	{
-		Combat->bAiming = false;
+		Combat->SetAiming(false);
 	}
 }
 

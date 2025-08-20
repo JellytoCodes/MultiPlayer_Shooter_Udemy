@@ -78,7 +78,7 @@ private :
 	UPROPERTY(ReplicatedUsing= OnRep_OverlappingWeapon)
 	TObjectPtr<AWeapon> OverlappingWeapon;
 
-	UFUNCTION()
+	UFUNCTION() 
 	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
 
 	UPROPERTY(VisibleAnywhere)
