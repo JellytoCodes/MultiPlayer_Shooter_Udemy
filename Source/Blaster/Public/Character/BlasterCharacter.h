@@ -87,4 +87,9 @@ private :
 	UFUNCTION(Server, Reliable)
 	void ServerEquipButtonPressed();
 
+	UFUNCTION(Server, Reliable)
+	void ServerAimButtonPressed();
+
+	UFUNCTION(Server, Reliable)
+	void ServerAimButtonReleased();
 };

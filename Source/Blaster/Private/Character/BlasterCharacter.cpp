@@ -5,6 +5,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "BlasterComponents/CombatComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -34,6 +35,8 @@ ABlasterCharacter::ABlasterCharacter()
 	Combat->SetIsReplicated(true);
 
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
 void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -133,6 +136,11 @@ void ABlasterCharacter::EquipButtonPressed()
 	}
 }
 
+void ABlasterCharacter::ServerEquipButtonPressed_Implementation()
+{
+	Combat->EquipWeapon(OverlappingWeapon);
+}
+
 void ABlasterCharacter::CrouchButtonPressed()
 {
 	if (bIsCrouched)	UnCrouch();
@@ -143,16 +151,40 @@ void ABlasterCharacter::AimButtonPressed()
 {
 	if (Combat)
 	{
-		Combat->SetAiming(true);	
+		if (HasAuthority())
+		{
+			Combat->SetAiming(true);	
+		}
+		else
+		{
+			ServerAimButtonPressed();
+		}
 	}
+}
+
+void ABlasterCharacter::ServerAimButtonPressed_Implementation()
+{
+	Combat->SetAiming(true);
 }
 
 void ABlasterCharacter::AimButtonReleased()
 {
 	if (Combat)
 	{
-		Combat->SetAiming(false);
+		if (HasAuthority())
+		{
+			Combat->SetAiming(false);	
+		}
+		else
+		{
+			ServerAimButtonReleased();
+		}
 	}
+}
+
+void ABlasterCharacter::ServerAimButtonReleased_Implementation()
+{
+	Combat->SetAiming(false);
 }
 
 void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon)
@@ -183,11 +215,6 @@ void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 	{
 		LastWeapon->ShowPickupWidget(false);
 	}
-}
-
-void ABlasterCharacter::ServerEquipButtonPressed_Implementation()
-{
-	Combat->EquipWeapon(OverlappingWeapon);
 }
 
 bool ABlasterCharacter::IsWeaponEquipped()
