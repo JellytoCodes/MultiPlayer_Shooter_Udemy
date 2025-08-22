@@ -32,6 +32,8 @@ public:
 
 	/** ~Begin Getter & Setter */
 	void SetOverlappingWeapon(AWeapon* Weapon);
+	FORCEINLINE float GetAO_Yaw() const { return AO_Yaw; }
+	FORCEINLINE float GETAO_Pitch() const {return AO_Pitch; }
 	/** ~End Getter & Setter */
 
 protected:
@@ -43,7 +45,7 @@ protected:
 	void CrouchButtonPressed();
 	void AimButtonPressed();
 	void AimButtonReleased();
-
+	void AimOffset(float DeltaTime);
 private :
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<USpringArmComponent> CameraBoom;
@@ -51,6 +53,7 @@ private :
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<UCameraComponent> FollowCamera;
 
+#pragma region Inputs
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
 
@@ -71,6 +74,7 @@ private :
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	UInputAction* AimAction;
+#pragma endregion
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWidgetComponent> OverheadWidget;
@@ -92,4 +96,8 @@ private :
 
 	UFUNCTION(Server, Reliable)
 	void ServerAimButtonReleased();
+
+	float AO_Yaw;
+	float AO_Pitch;
+	FRotator StartingAimRotation;
 };
