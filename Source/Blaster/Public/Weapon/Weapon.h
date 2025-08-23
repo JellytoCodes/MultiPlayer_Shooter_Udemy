@@ -30,8 +30,11 @@ public:
 	void ShowPickupWidget(const bool bShowWidget);
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
+	/** ~Begin Getter & Setter */
 	void SetWeaponState(const EWeaponState State);
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
+	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
+	/** ~End Getter & Setter */
 
 protected:
 	virtual void BeginPlay() override;
