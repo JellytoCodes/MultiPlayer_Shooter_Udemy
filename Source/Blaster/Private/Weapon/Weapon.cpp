@@ -2,10 +2,14 @@
 
 #include "Weapon/Weapon.h"
 
+#include "../../../../../../../UE_5.4/Engine/Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
 #include "Character/BlasterCharacter.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Engine/SkeletalMeshSocket.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+#include "Weapon/Casing.h"
 
 AWeapon::AWeapon()
 {
@@ -26,6 +30,9 @@ AWeapon::AWeapon()
 
 	PickupWidget = CreateDefaultSubobject<UWidgetComponent>("PickupWidget");
 	PickupWidget->SetupAttachment(GetRootComponent());
+
+	MuzzleEffect = CreateDefaultSubobject<UNiagaraComponent>("MuzzleEffect");
+	MuzzleEffect->SetAutoActivate(false);
 }
 
 void AWeapon::BeginPlay()
@@ -91,5 +98,27 @@ void AWeapon::OnRep_WeaponState()
 		ShowPickupWidget(false);
 		AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		break;
+	}
+}
+
+void AWeapon::Fire(const FVector& HitTarget)
+{
+	if (MuzzleEffect == nullptr || FireSound == nullptr) return;
+
+	FTransform MuzzlePosition = WeaponMesh->GetSocketTransform(MuzzleName);
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, MuzzlePosition.GetLocation(), 1.f);
+	MuzzleEffect->AttachToComponent(WeaponMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, MuzzleName);
+	MuzzleEffect->SetActive(true);
+
+	if (CasingClass)
+	{
+		if (const USkeletalMeshSocket* AmmoEjectSocket = WeaponMesh->GetSocketByName(FName("AmmoEject")))
+		{
+			FTransform SocketTransform = AmmoEjectSocket->GetSocketTransform(WeaponMesh);
+			if (UWorld* World = GetWorld())
+			{
+				World->SpawnActor<ACasing>(CasingClass, SocketTransform.GetLocation(), SocketTransform.GetRotation().Rotator());
+			}
+		}
 	}
 }
