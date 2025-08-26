@@ -8,6 +8,7 @@
 #include "Interfaces/InteractWithCrosshairsInterface.h"
 #include "BlasterCharacter.generated.h"
 
+class ABlasterPlayerController;
 class UCombatComponent;
 class AWeapon;
 class UWidgetComponent;
@@ -32,9 +33,6 @@ public:
 	void PlayFireMontage(bool bAiming);
 	void PlayHitReactMontage();
 
-	UFUNCTION(NetMulticast, Reliable)
-	void MulticastHitReact();
-
 	virtual void OnRep_ReplicatedMovement() override;
 
 	/** ~Begin Getter & Setter */
@@ -47,6 +45,7 @@ public:
 	FORCEINLINE float GetAO_Pitch() const {return AO_Pitch; }
 	FORCEINLINE ETurningInPlace GetTurningInPlace() const { return TurningInPlace; }
 	FVector GetHitTarget() const;
+	void UpdateHUDHealth();
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE bool ShouldRotateRootBone() const { return bRotateRootBone; }
 	/** ~End Getter & Setter */
@@ -60,11 +59,17 @@ protected:
 	void CrouchButtonPressed();
 	void AimButtonPressed();
 	void AimButtonReleased();
-	void AimOffset(float DeltaTime);
-	void SimProxiesTurn();
 	virtual void Jump() override;
 	void FireButtonPressed();
 	void FireButtonReleased();
+
+	void AimOffset(float DeltaTime);
+	void SimProxiesTurn();
+
+	UFUNCTION()
+	void ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser);
+
+	void Elim();
 
 private :
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
@@ -140,4 +145,20 @@ private :
 	float ProxyYaw;
 	float TimeSinceLastMovementReplication;
 	float CalculateSpeed();
+
+	/**
+	 * Player Health
+	 */
+
+	UPROPERTY(EditAnywhere, Category = "Player Stats")
+	float MaxHealth = 100.f;
+
+	UPROPERTY(ReplicatedUsing = OnRep_Health, VisibleAnywhere, Category = "Player Stats")
+	float Health = 100.f;
+
+	UFUNCTION()
+	void OnRep_Health();
+
+	UPROPERTY()
+	ABlasterPlayerController* BlasterPC;
 };

@@ -31,6 +31,9 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastProjectileEffect();
 
+	UPROPERTY(EditAnywhere)
+	float Damage = 20.f;
+
 private :
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UBoxComponent> CollisionBox;
@@ -49,4 +52,5 @@ private :
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UParticleSystemComponent> ParticleSystemComponent;
+
 };
