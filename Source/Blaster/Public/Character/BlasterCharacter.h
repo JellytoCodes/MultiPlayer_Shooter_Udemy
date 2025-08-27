@@ -33,6 +33,13 @@ public:
 	void PlayFireMontage(bool bAiming);
 	void PlayHitReactMontage();
 
+	void Elim();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastElim();
+
+	void PlayElimMontage();
+
 	virtual void OnRep_ReplicatedMovement() override;
 
 	/** ~Begin Getter & Setter */
@@ -48,6 +55,7 @@ public:
 	void UpdateHUDHealth();
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE bool ShouldRotateRootBone() const { return bRotateRootBone; }
+	FORCEINLINE bool IsElimmed() const { return bElimmed; }
 	/** ~End Getter & Setter */
 
 protected:
@@ -68,8 +76,6 @@ protected:
 
 	UFUNCTION()
 	void ReceiveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatorController, AActor* DamageCauser);
-
-	void Elim();
 
 private :
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
@@ -133,6 +139,9 @@ private :
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<UAnimMontage> ElimMontage;
+
 	void HideCameraIfCharacterClose();
 
 	UPROPERTY(EditAnywhere)
@@ -161,4 +170,13 @@ private :
 
 	UPROPERTY()
 	ABlasterPlayerController* BlasterPC;
+
+	bool bElimmed = false;
+
+	FTimerHandle ElimTimer;
+
+	UPROPERTY(EditDefaultsOnly)
+	float ElimDelay = 3.f;
+
+	void ElimTimerFinished();
 };
