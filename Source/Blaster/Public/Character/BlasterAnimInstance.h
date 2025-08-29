@@ -26,6 +26,7 @@ private :
 	UPROPERTY()
 	TObjectPtr<AWeapon> EquippedWeapon;
 
+#pragma region Movement
 	UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float Speed;
 
@@ -77,6 +78,6 @@ private :
 	FRotator CharacterRotationLastFrame;
 	FRotator CharacterRotation;
 	FRotator DeltaRotation;
-
+#pragma endregion
 	
 };

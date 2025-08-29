@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "BlasterTypes/TurningInPlace.h"
+#include "Components/TimelineComponent.h"
 #include "Interfaces/InteractWithCrosshairsInterface.h"
 #include "BlasterCharacter.generated.h"
 
@@ -155,10 +156,7 @@ private :
 	float TimeSinceLastMovementReplication;
 	float CalculateSpeed();
 
-	/**
-	 * Player Health
-	 */
-
+#pragma region Player Health
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
 	float MaxHealth = 100.f;
 
@@ -179,4 +177,29 @@ private :
 	float ElimDelay = 3.f;
 
 	void ElimTimerFinished();
+#pragma endregion
+
+#pragma region Dissolve effect
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UTimelineComponent> DissolveTimeline;
+
+	FOnTimelineFloat DissolveTrack;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UCurveFloat> DissolveCurve;
+
+	UFUNCTION()
+	void UpdateDissolveMaterial(float DissolveValue);
+
+	void StartDissolve();
+
+	// Dynamic instance that we can change at runtime
+	UPROPERTY(VisibleAnywhere, Category = "Elim")
+	TObjectPtr<UMaterialInstanceDynamic> DynamicDissolveMaterialInstance;
+
+	// Material instance set on the Blueprint, used with the dynamic material instance
+	UPROPERTY(EditAnywhere, Category = "Elim")
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+#pragma endregion
+
 };

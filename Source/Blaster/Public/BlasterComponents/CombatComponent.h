@@ -68,10 +68,7 @@ private :
 
 	bool bFireButtonPressed;
 
-	/**
-	 * HUD and crosshairs
-	 */
-
+#pragma region HUD and Crosshairs
 	float CrosshairVelocityFactor;
 	float CrosshairInAirFactor;
 	float CrosshairAimFactor;
@@ -80,11 +77,9 @@ private :
 	FHUDPackage HUDPackage;
 
 	FVector HitTarget;
+#pragma endregion
 
-	/**
-	 * Aiming and FOV
-	 */
-
+#pragma region Aiming and FOV
 	// Field of view when not aiming; set to the camera's base FOV in BeginPlay
 	float DefaultFOV;
 
@@ -97,14 +92,14 @@ private :
 	float CurrentFOV;
 
 	void InterpFOV(float DeltaTime);
+#pragma endregion
 
-	/**
-	 * Automatic fire
-	 */
+#pragma region Automatic fire
 	FTimerHandle FireTimer;
 
 	bool bCanFire = true;
 
 	void StartFireTimer();
 	void FireTimerFinished();
+#pragma endregion
 };
