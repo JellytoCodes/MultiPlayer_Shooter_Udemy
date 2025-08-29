@@ -33,7 +33,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual void Fire(const FVector& HitTarget);
-
+	void Dropped();
 	/** ~Begin Getter & Setter */
 	void SetWeaponState(const EWeaponState State);
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
