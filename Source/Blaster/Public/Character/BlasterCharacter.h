@@ -9,6 +9,7 @@
 #include "Interfaces/InteractWithCrosshairsInterface.h"
 #include "BlasterCharacter.generated.h"
 
+class ABlasterPlayerState;
 class ABlasterPlayerController;
 class UCombatComponent;
 class AWeapon;
@@ -41,8 +42,12 @@ public:
 	void MulticastElim();
 
 	void PlayElimMontage();
-
 	virtual void OnRep_ReplicatedMovement() override;
+
+	void UpdateHUDHealth();
+
+	// Poll for any relelvant classes and initialize our HUD
+	void PollInit();
 
 	/** ~Begin Getter & Setter */
 	void SetOverlappingWeapon(AWeapon* Weapon);
@@ -54,10 +59,11 @@ public:
 	FORCEINLINE float GetAO_Pitch() const {return AO_Pitch; }
 	FORCEINLINE ETurningInPlace GetTurningInPlace() const { return TurningInPlace; }
 	FVector GetHitTarget() const;
-	void UpdateHUDHealth();
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE bool ShouldRotateRootBone() const { return bRotateRootBone; }
 	FORCEINLINE bool IsElimmed() const { return bElimmed; }
+	FORCEINLINE float GetHealth() const { return Health; }
+	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
 	/** ~End Getter & Setter */
 
 protected:
@@ -215,4 +221,6 @@ private :
 	TObjectPtr<USoundBase> ElimBotSound;
 #pragma endregion
 
+	UPROPERTY()
+	ABlasterPlayerState* BlasterPlayerState;
 };
