@@ -30,6 +30,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PostInitializeComponents() override;
+	virtual void Destroyed() override;
 
 	void PlayFireMontage(bool bAiming);
 	void PlayHitReactMontage();
@@ -200,6 +201,18 @@ private :
 	// Material instance set on the Blueprint, used with the dynamic material instance
 	UPROPERTY(EditAnywhere, Category = "Elim")
 	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+#pragma endregion
+
+#pragma region Elim bot
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UParticleSystem> ElimBotEffect;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UParticleSystemComponent> ElimBotComponent;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> ElimBotSound;
 #pragma endregion
 
 };
