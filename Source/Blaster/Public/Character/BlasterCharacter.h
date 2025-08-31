@@ -36,13 +36,17 @@ public:
 	void PlayFireMontage(bool bAiming);
 	void PlayHitReactMontage();
 
+	void PlayElimMontage();
+	virtual void OnRep_ReplicatedMovement() override;
+
+	void PlayReloadMontage();
+
 	void Elim();
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastElim();
 
-	void PlayElimMontage();
-	virtual void OnRep_ReplicatedMovement() override;
+	
 
 	void UpdateHUDHealth();
 
@@ -78,6 +82,7 @@ protected:
 	virtual void Jump() override;
 	void FireButtonPressed();
 	void FireButtonReleased();
+	void ReloadButtonPressed();
 
 	void AimOffset(float DeltaTime);
 	void SimProxiesTurn();
@@ -116,6 +121,9 @@ private :
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	UInputAction* FireAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	UInputAction* ReloadAction;
 #pragma endregion
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -143,6 +151,9 @@ private :
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> FireWeaponMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<UAnimMontage> ReloadMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;

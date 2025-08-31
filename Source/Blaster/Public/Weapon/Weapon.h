@@ -4,23 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Weapon/WeaponTypes.h"
 #include "Weapon.generated.h"
 
+class ABlasterPlayerController;
+class ABlasterCharacter;
 class ACasing;
 class UNiagaraComponent;
 class UWidgetComponent;
 class USphereComponent;
 class USkeletalMeshComponent;
-
-UENUM(BlueprintType)
-enum class EWeaponState : uint8
-{
-	EWS_Initial UMETA(DisplayName = "Initial State"),
-	EWS_Equipped UMETA(DisplayName = "Equipped"),
-	EWS_Dropped UMETA(DisplayName = "Dropped"),
-
-	EWS_MAX UMETA(DisplayName = "DefaultMAX")
-};
 
 UCLASS()
 class BLASTER_API AWeapon : public AActor
@@ -31,20 +24,23 @@ public:
 	AWeapon();
 	void ShowPickupWidget(const bool bShowWidget);
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void OnRep_Owner() override;
 
 	virtual void Fire(const FVector& HitTarget);
 	void Dropped();
+	void SetHUDAmmo();
+
 	/** ~Begin Getter & Setter */
 	void SetWeaponState(const EWeaponState State);
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
 	FORCEINLINE float GetZoomedFOV() const { return ZoomedFOV; }
 	FORCEINLINE float GetZoomInterpSpeed() const { return ZoomInterpSpeed; }
+	FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
+	bool IsAmmoEmpty();
 	/** ~End Getter & Setter */
 
-	/**
-	 * Textures for the weapon crosshairs
-	 */
+#pragma region Crosshairs
 	UPROPERTY(EditAnywhere, Category = "Crosshairs")
 	TSoftObjectPtr<UTexture2D> CrosshairsCenter = nullptr;
 
@@ -59,6 +55,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Crosshairs")
 	TSoftObjectPtr<UTexture2D> CrosshairsBottom = nullptr;
+#pragma endregion
 
 	/**
 	 * Zoomed FOV while aiming
@@ -117,9 +114,25 @@ private :
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ACasing> CasingClass;
 
-	UPROPERTY(EditAnywhere)
+#pragma region Ammo
+	UPROPERTY(EditAnywhere, ReplicatedUsing = OnRep_Ammo)
 	int32 Ammo;
+
+	UFUNCTION()
+	void OnRep_Ammo();
+
+	void SpendRound();
 
 	UPROPERTY(EditAnywhere)
 	int32 MagCapacity;
+
+	UPROPERTY(EditAnywhere)
+	EWeaponType WeaponType;
+
+#pragma endregion
+	UPROPERTY()
+	ABlasterCharacter* BlasterOwnerCharacter;
+
+	UPROPERTY()
+	ABlasterPlayerController* BlasterOwnerController;
 };

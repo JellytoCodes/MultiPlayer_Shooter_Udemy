@@ -20,6 +20,7 @@
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PlayerState/BlasterPlayerState.h"
+#include "Weapon/WeaponTypes.h"
 
 ABlasterCharacter::ABlasterCharacter()
 {
@@ -82,6 +83,7 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ABlasterCharacter::AimButtonReleased);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ABlasterCharacter::FireButtonPressed);
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &ABlasterCharacter::FireButtonReleased);
+		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &ABlasterCharacter::ReloadButtonPressed);
 	}
 }
 
@@ -247,6 +249,11 @@ void ABlasterCharacter::FireButtonReleased()
 	if (Combat && Combat->EquippedWeapon) Combat->FireButtonPressed(false);
 }
 
+void ABlasterCharacter::ReloadButtonPressed()
+{
+	if (Combat) Combat->Reload();
+}
+
 AWeapon* ABlasterCharacter::GetEquippedWeapon()
 {
 	if (Combat == nullptr) return nullptr;
@@ -363,6 +370,25 @@ void ABlasterCharacter::OnRep_ReplicatedMovement()
 
 	SimProxiesTurn();	
 	TimeSinceLastMovementReplication = 0;
+}
+
+void ABlasterCharacter::PlayReloadMontage()
+{
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) return;
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && FireWeaponMontage)
+	{
+		AnimInstance->Montage_Play(ReloadMontage);
+		FName SectionName;
+		switch(Combat->EquippedWeapon->GetWeaponType())
+		{
+		case EWeaponType::EWT_AssaultRifle :
+			SectionName = "Rifle";
+			break;
+		}
+		AnimInstance->Montage_JumpToSection(SectionName);
+	}
 }
 
 void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon)
@@ -492,6 +518,10 @@ void ABlasterCharacter::Elim()
 
 void ABlasterCharacter::MulticastElim_Implementation()
 {
+	if (BlasterPC)
+	{
+		BlasterPC->SetHUDWeaponAmmo(0);
+	}
 	bElimmed = true;
 	PlayElimMontage();
 

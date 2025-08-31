@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "HUD/BlasterHUD.h"
+#include "Weapon/WeaponTypes.h"
 #include "CombatComponent.generated.h"
 
 #define TRACE_LENGTH 50000
@@ -21,11 +22,13 @@ class BLASTER_API UCombatComponent : public UActorComponent
 public:	
 	UCombatComponent();
 	friend class ABlasterCharacter;
-
+	
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 	void EquipWeapon(AWeapon* WeaponToEquip);
+
+	void Reload();
 
 protected:
 	virtual void BeginPlay() override;
@@ -48,6 +51,9 @@ protected:
 
 	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
 	void SetHUDCrosshairs(float DeltaTime);
+
+	UFUNCTION(Server, Reliable)
+	void ServerReload();
 
 private :
 	UPROPERTY()
@@ -106,5 +112,22 @@ private :
 
 	void StartFireTimer();
 	void FireTimerFinished();
+
+	bool CanFire();
+
+	// Carried ammo for the currently-equipped weapon
+	UPROPERTY(ReplicatedUsing = OnRep_CarriedAmmo)
+	int32 CarriedAmmo;
+
+	UFUNCTION()
+	void OnRep_CarriedAmmo();
+
+	TMap<EWeaponType, int32> CarriedAmmoMap;
+
+	UPROPERTY(EditAnywhere)
+	int32 StartingARAmmo = 30;
+
+	void InitializeCarriedAmmo();
+
 #pragma endregion
 };
