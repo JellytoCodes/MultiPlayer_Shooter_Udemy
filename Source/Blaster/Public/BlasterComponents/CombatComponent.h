@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BlasterTypes/CombatState.h"
 #include "Components/ActorComponent.h"
 #include "HUD/BlasterHUD.h"
 #include "Weapon/WeaponTypes.h"
@@ -54,6 +55,13 @@ protected:
 
 	UFUNCTION(Server, Reliable)
 	void ServerReload();
+
+	void HandleReload();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishReloading();
+
+	int32 AmountToReload();
 
 private :
 	UPROPERTY()
@@ -129,5 +137,14 @@ private :
 
 	void InitializeCarriedAmmo();
 
+	UPROPERTY(ReplicatedUsing=OnRep_CombatState)
+	ECombatState CombatState = ECombatState::ECS_Unoccupied;
+
+	UFUNCTION()
+	void OnRep_CombatState();
+
+	void UpdateAmmoValues();
 #pragma endregion
+
+
 };

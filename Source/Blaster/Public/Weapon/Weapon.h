@@ -29,14 +29,18 @@ public:
 	virtual void Fire(const FVector& HitTarget);
 	void Dropped();
 	void SetHUDAmmo();
+	void AddAmmo(int32 AmmoToAdd);
 
 	/** ~Begin Getter & Setter */
 	void SetWeaponState(const EWeaponState State);
+	EWeaponState GetWeaponState() const {return WeaponState;}
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
 	FORCEINLINE float GetZoomedFOV() const { return ZoomedFOV; }
 	FORCEINLINE float GetZoomInterpSpeed() const { return ZoomInterpSpeed; }
 	FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
+	int32 GetAmmo() const { return Ammo; }
+	int32 GetMagCapacity() const { return MagCapacity; }
 	bool IsAmmoEmpty();
 	/** ~End Getter & Setter */
 
@@ -76,6 +80,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	bool bAutomatic = true;
 
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> EquipSound;
 
 protected:
 	virtual void BeginPlay() override;

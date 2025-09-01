@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BlasterTypes/CombatState.h"
 #include "GameFramework/Character.h"
 #include "BlasterTypes/TurningInPlace.h"
 #include "Components/TimelineComponent.h"
@@ -46,8 +47,6 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastElim();
 
-	
-
 	void UpdateHUDHealth();
 
 	// Poll for any relelvant classes and initialize our HUD
@@ -68,6 +67,7 @@ public:
 	FORCEINLINE bool IsElimmed() const { return bElimmed; }
 	FORCEINLINE float GetHealth() const { return Health; }
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
+	ECombatState GetCombatState() const;
 	/** ~End Getter & Setter */
 
 protected:
@@ -135,7 +135,7 @@ private :
 	UFUNCTION() 
 	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCombatComponent> Combat;
 
 	UFUNCTION(Server, Reliable)

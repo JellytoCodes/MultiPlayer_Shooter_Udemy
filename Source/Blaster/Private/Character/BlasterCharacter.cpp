@@ -142,6 +142,13 @@ void ABlasterCharacter::PollInit()
 	}
 }
 
+ECombatState ABlasterCharacter::GetCombatState() const
+{
+	if (Combat == nullptr) return ECombatState::ECS_MAX;
+	return Combat->CombatState;
+
+}
+
 void ABlasterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -173,6 +180,7 @@ void ABlasterCharacter::Tick(float DeltaTime)
 
 	HideCameraIfCharacterClose();
 	PollInit();
+	
 }
 
 void ABlasterCharacter::Move(const FInputActionValue& Value)
