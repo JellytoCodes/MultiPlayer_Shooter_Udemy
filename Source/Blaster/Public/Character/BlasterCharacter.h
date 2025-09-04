@@ -46,11 +46,14 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastElim();
-
 	void UpdateHUDHealth();
 
 	// Poll for any relelvant classes and initialize our HUD
 	void PollInit();
+	void RotateInPlace(float DeltaSeconds);
+
+	UPROPERTY(Replicated)
+	bool bDisableGameplay = false;
 
 	/** ~Begin Getter & Setter */
 	void SetOverlappingWeapon(AWeapon* Weapon);
@@ -67,6 +70,8 @@ public:
 	FORCEINLINE bool IsElimmed() const { return bElimmed; }
 	FORCEINLINE float GetHealth() const { return Health; }
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
+	FORCEINLINE UCombatComponent* GetCombat() const { return Combat; }
+	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
 	ECombatState GetCombatState() const;
 	/** ~End Getter & Setter */
 

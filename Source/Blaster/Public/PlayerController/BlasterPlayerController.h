@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "BlasterPlayerController.generated.h"
 
+class ABlasterGameMode;
 class UCharacterOverlay;
 class ABlasterHUD;
 
@@ -24,8 +25,9 @@ public :
 
 	void OnMatchStateSet(FName State);
 	void HandleMatchHasStarted();
+	void HandleCooldown();
 
-	/** Set HUD */
+#pragma region Set HUD
 	void SetHUDHealth(float Health, float MaxHealth);
 	void SetHUDScore(float Score);
 	void SetHUDDefeats(int32 Defeats);
@@ -33,6 +35,7 @@ public :
 	void SetHUDCarriedAmmo(int32 CarriedAmmo);
 	void SetHUDMatchCountdown(float CountdownTime);
 	void SetHUDAnnouncementCountdown(float CountdownTime);
+#pragma endregion
 
 protected :
 	virtual void BeginPlay() override;
@@ -63,15 +66,19 @@ protected :
 	void ServerCheckMatchState();
 
 	UFUNCTION(Client, Reliable)
-	void ClientJoinMidGame(FName StateOfMatch, float Warmup, float Match, float StartingTime);
+	void ClientJoinMidGame(FName StateOfMatch, float Warmup, float Match, float Cooldown, float StartingTime);
 
 private :
 	UPROPERTY()
 	ABlasterHUD* BlasterHUD;
 
+	UPROPERTY()
+	ABlasterGameMode* BlasterGameMode;
+
 	float LevelStartingTime;
 	float MatchTime = 0.f;
 	float WarmupTime = 0.f;
+	float CooldownTime = 0.f;
 	uint32 CountdownInt = 0;
 
 	UPROPERTY(ReplicatedUsing=OnRep_MatchState)
