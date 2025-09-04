@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "BlasterPlayerController.generated.h"
 
+class UCharacterOverlay;
 class ABlasterHUD;
 
 UCLASS()
@@ -16,20 +17,27 @@ class BLASTER_API ABlasterPlayerController : public APlayerController
 public :
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void Tick(float DeltaSeconds) override;
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual float GetServerTime(); // Synced with server world clock
 	virtual void ReceivedPlayer() override; // Sync with server clock as soon as possible
 
+	void OnMatchStateSet(FName State);
+	void HandleMatchHasStarted();
+
+	/** Set HUD */
 	void SetHUDHealth(float Health, float MaxHealth);
 	void SetHUDScore(float Score);
 	void SetHUDDefeats(int32 Defeats);
 	void SetHUDWeaponAmmo(int32 Ammo);
 	void SetHUDCarriedAmmo(int32 CarriedAmmo);
 	void SetHUDMatchCountdown(float CountdownTime);
+	void SetHUDAnnouncementCountdown(float CountdownTime);
 
 protected :
 	virtual void BeginPlay() override;
 	void SetHUDTime();
+	void PollInit();
 
 	/**
 	 * Sync time between client and server
@@ -51,10 +59,34 @@ protected :
 	float TimeSyncRunningTime = 0.f;
 	void CheckTimeSync(float DeltaTime);
 
+	UFUNCTION(Server, Reliable)
+	void ServerCheckMatchState();
+
+	UFUNCTION(Client, Reliable)
+	void ClientJoinMidGame(FName StateOfMatch, float Warmup, float Match, float StartingTime);
+
 private :
 	UPROPERTY()
 	ABlasterHUD* BlasterHUD;
 
-	float MatchTime = 120.f;
+	float LevelStartingTime;
+	float MatchTime = 0.f;
+	float WarmupTime = 0.f;
 	uint32 CountdownInt = 0;
+
+	UPROPERTY(ReplicatedUsing=OnRep_MatchState)
+	FName MatchState;
+
+	UFUNCTION()
+	void OnRep_MatchState();
+
+	UPROPERTY()
+	TObjectPtr<UCharacterOverlay> CharacterOverlay;
+
+	bool bInitializeCharacterOverlay = false;
+
+	float HUDHealth;
+	float HUDMaxHealth;
+	float HUDScore;
+	int32 HUDDefeats;
 };
