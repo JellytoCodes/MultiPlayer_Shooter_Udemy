@@ -101,10 +101,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Fire Effect")
 	FName MuzzleName = "Muzzle";
 
-private :
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	TObjectPtr<USkeletalMeshComponent> WeaponMesh;
 
+private :
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	TObjectPtr<USphereComponent> AreaSphere;
 

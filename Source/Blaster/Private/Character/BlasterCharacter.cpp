@@ -420,6 +420,12 @@ void ABlasterCharacter::PlayReloadMontage()
 		case EWeaponType::EWT_AssaultRifle :
 			SectionName = "Rifle";
 			break;
+		case EWeaponType::EWT_RocketLauncher :
+			SectionName = "Rifle";
+			break;
+		case EWeaponType::EWT_Pistol :
+			SectionName = "Rifle";
+			break;
 		}
 		AnimInstance->Montage_JumpToSection(SectionName);
 	}
@@ -573,6 +579,7 @@ void ABlasterCharacter::MulticastElim_Implementation()
 	GetCharacterMovement()->DisableMovement();
 	GetCharacterMovement()->StopMovementImmediately();
 	bDisableGameplay = true;
+	
 	if (Combat)
 	{
 		Combat->FireButtonPressed(false);
