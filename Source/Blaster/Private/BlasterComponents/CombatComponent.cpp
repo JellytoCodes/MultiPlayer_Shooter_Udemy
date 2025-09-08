@@ -384,7 +384,7 @@ void UCombatComponent::InitializeCarriedAmmo()
 {
 	CarriedAmmoMap.Add(EWeaponType::EWT_AssaultRifle, StartingARAmmo);
 	CarriedAmmoMap.Add(EWeaponType::EWT_RocketLauncher, StartingRocketAmmo);
-	CarriedAmmoMap.Add(EWeaponType::EWT_Pistol, StartingPistolAmmo);
+	CarriedAmmoMap.Add(EWeaponType::EWT_SubmachineGun, StartingPistolAmmo);
 }
 
 void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)

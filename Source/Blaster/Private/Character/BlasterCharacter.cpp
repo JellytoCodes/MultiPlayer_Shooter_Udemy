@@ -423,7 +423,7 @@ void ABlasterCharacter::PlayReloadMontage()
 		case EWeaponType::EWT_RocketLauncher :
 			SectionName = "Rifle";
 			break;
-		case EWeaponType::EWT_Pistol :
+		case EWeaponType::EWT_SubmachineGun :
 			SectionName = "Rifle";
 			break;
 		}
