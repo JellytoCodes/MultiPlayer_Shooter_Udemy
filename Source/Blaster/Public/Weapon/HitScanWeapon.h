@@ -20,4 +20,7 @@ private :
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UParticleSystem> ImpactParticles;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UParticleSystem> BeamParticles;
 };
